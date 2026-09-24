@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
 
-app = Flask(__name__, template_folder="Templates")
+app = Flask(__name__, template_folder="templates")
 
 app.secret_key = "change-this-secret-key"
 
