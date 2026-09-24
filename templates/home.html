@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Theater Management System</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            background: #f4f6f9;
+
+            color: #222;
+
+            transition: 0.3s;
+        }
+
+
+        body.dark {
+
+            background: #121212;
+
+            color: white;
+        }
+
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+
+            background: #222;
+
+            padding: 15px 25px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .logo {
+
+            color: white;
+
+            font-size: 22px;
+
+            font-weight: bold;
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+        }
+
+
+        nav a {
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 10px 14px;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+
+        nav a:hover {
+
+            background: #444;
+        }
+
+
+        /* ================= THEME BUTTONS ================= */
+
+        .theme-buttons {
+
+            display: flex;
+
+            gap: 8px;
+        }
+
+
+        .theme-buttons button {
+
+            padding: 8px 15px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        .light-btn {
+
+            background: white;
+
+            color: black;
+        }
+
+
+        .dark-btn {
+
+            background: #555;
+
+            color: white;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .container {
+
+            width: 90%;
+
+            max-width: 1100px;
+
+            margin: 50px auto;
+
+            text-align: center;
+        }
+
+
+        .welcome {
+
+            font-size: 32px;
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+        }
+
+
+        .system-title {
+
+            font-size: 38px;
+
+            font-weight: bold;
+
+            margin-bottom: 15px;
+        }
+
+
+        .description {
+
+            font-size: 18px;
+
+            margin-bottom: 40px;
+
+            color: #666;
+        }
+
+
+        body.dark .description {
+
+            color: #ccc;
+        }
+
+
+        /* ================= LOGIN / REGISTER ================= */
+
+        .auth-container {
+
+            max-width: 550px;
+
+            margin: 80px auto;
+
+            text-align: center;
+        }
+
+
+        .auth-title {
+
+            font-size: 36px;
+
+            font-weight: bold;
+
+            margin-bottom: 15px;
+        }
+
+
+        .auth-description {
+
+            font-size: 18px;
+
+            margin-bottom: 35px;
+
+            color: #666;
+        }
+
+
+        body.dark .auth-description {
+
+            color: #ccc;
+        }
+
+
+        .auth-buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .auth-btn {
+
+            display: inline-block;
+
+            padding: 14px 30px;
+
+            border-radius: 8px;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            min-width: 140px;
+        }
+
+
+        .login-btn {
+
+            background: #007bff;
+        }
+
+
+        .login-btn:hover {
+
+            background: #0056b3;
+        }
+
+
+        .register-btn {
+
+            background: #28a745;
+        }
+
+
+        .register-btn:hover {
+
+            background: #218838;
+        }
+
+
+        /* ================= CARDS ================= */
+
+        .cards {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(200px, 1fr));
+
+            gap: 25px;
+
+            margin-top: 30px;
+        }
+
+
+        .card {
+
+            background: white;
+
+            padding: 30px 20px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.10);
+
+            transition: 0.3s;
+        }
+
+
+        body.dark .card {
+
+            background: #1e1e1e;
+
+            color: white;
+        }
+
+
+        .card:hover {
+
+            transform: translateY(-5px);
+        }
+
+
+        .card h2 {
+
+            margin-top: 0;
+
+            margin-bottom: 12px;
+        }
+
+
+        .card p {
+
+            color: #666;
+
+            line-height: 1.5;
+        }
+
+
+        body.dark .card p {
+
+            color: #ccc;
+        }
+
+
+        .card-btn {
+
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 10px 18px;
+
+            background: #007bff;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+        }
+
+
+        .card-btn:hover {
+
+            background: #0056b3;
+        }
+
+
+        /* ================= TOP BUTTONS ================= */
+
+        .top-actions {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+
+            margin-bottom: 35px;
+        }
+
+
+        .action-btn {
+
+            padding: 13px 22px;
+
+            border-radius: 7px;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+
+        .movie-btn {
+
+            background: #007bff;
+        }
+
+
+        .movie-btn:hover {
+
+            background: #0056b3;
+        }
+
+
+        .theater-btn {
+
+            background: #28a745;
+        }
+
+
+        .theater-btn:hover {
+
+            background: #218838;
+        }
+
+
+        .show-btn {
+
+            background: #6f42c1;
+        }
+
+
+        .show-btn:hover {
+
+            background: #59339d;
+        }
+
+
+        .booking-btn {
+
+            background: #fd7e14;
+        }
+
+
+        .booking-btn:hover {
+
+            background: #e8590c;
+        }
+
+
+        /* ================= FLASH MESSAGE ================= */
+
+        .flash-message {
+
+            width: 90%;
+
+            max-width: 700px;
+
+            margin: 20px auto;
+
+            padding: 12px;
+
+            background: #d4edda;
+
+            color: #155724;
+
+            border-radius: 6px;
+
+            text-align: center;
+
+            transition: opacity 0.5s;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+
+            margin-top: 60px;
+
+            padding: 20px;
+
+            background: #222;
+
+            color: white;
+
+            text-align: center;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 600px) {
+
+            nav {
+
+                flex-direction: column;
+
+            }
+
+
+            .theme-buttons {
+
+                margin-top: 10px;
+
+            }
+
+
+            .auth-title {
+
+                font-size: 28px;
+            }
+
+
+            .system-title {
+
+                font-size: 30px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav>
+
+
+        <div class="logo">
+
+            Theater Management
+
+        </div>
+
+
+        <div class="nav-links">
+
+
+            {% if session.get("user_id") %}
+
+                <a href="{{ url_for('home') }}">
+                    Home
+                </a>
+
+
+                <a href="{{ url_for('movies') }}">
+                    Movies
+                </a>
+
+
+                <a href="{{ url_for('theaters') }}">
+                    Theaters
+                </a>
+
+
+                <a href="{{ url_for('shows') }}">
+                    Shows
+                </a>
+
+
+                <a href="{{ url_for('bookings') }}">
+                    Bookings
+                </a>
+
+
+                <a href="{{ url_for('dashboard') }}">
+                    Dashboard
+                </a>
+
+
+                <a href="{{ url_for('logout') }}">
+                    Logout
+                </a>
+
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}">
+                    Login
+                </a>
+
+
+                <a href="{{ url_for('register') }}">
+                    Register
+                </a>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- ================= THEME BUTTONS ================= -->
+
+        <div class="theme-buttons">
+
+
+            <button
+                type="button"
+                class="light-btn"
+                onclick="setLight()">
+
+                ☀ Light
+
+            </button>
+
+
+            <button
+                type="button"
+                class="dark-btn"
+                onclick="setDark()">
+
+                🌙 Dark
+
+            </button>
+
+
+        </div>
+
+
+    </nav>
+
+
+    <!-- ================= FLASH MESSAGES ================= -->
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="flash-message">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- ===================================================== -->
+    <!-- NOT LOGGED IN -->
+    <!-- FIRST INTERFACE = LOGIN / REGISTER -->
+    <!-- ===================================================== -->
+
+    {% if not session.get("user_id") %}
+
+
+        <div class="auth-container">
+
+
+            <div class="auth-title">
+
+                Theater Management System
+
+            </div>
+
+
+            <div class="auth-description">
+
+                Please login or register to continue.
+
+            </div>
+
+
+            <div class="auth-buttons">
+
+
+                <a
+                    href="{{ url_for('login') }}"
+                    class="auth-btn login-btn">
+
+                    Login
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('register') }}"
+                    class="auth-btn register-btn">
+
+                    Register
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- ================================================= -->
+        <!-- LOGGED IN -->
+        <!-- ================================================= -->
+
+
+        <div class="container">
+
+
+            <!-- ================= WELCOME ================= -->
+
+            <div class="welcome">
+
+                Welcome {{ session.get("user_name") }}
+
+            </div>
+
+
+            <!-- ================= SYSTEM TITLE ================= -->
+
+            <div class="system-title">
+
+                Theater Management System
+
+            </div>
+
+
+            <div class="description">
+
+                Manage movies, theaters, shows and bookings
+                easily from one place.
+
+            </div>
+
+
+            <!-- ================= TOP ACTION BUTTONS ================= -->
+
+            <div class="top-actions">
+
+
+                <a
+                    href="{{ url_for('add_movie') }}"
+                    class="action-btn movie-btn">
+
+                    + Add Movie
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('add_theater') }}"
+                    class="action-btn theater-btn">
+
+                    + Add Theater
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('add_show') }}"
+                    class="action-btn show-btn">
+
+                    + Add Show
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('bookings') }}"
+                    class="action-btn booking-btn">
+
+                    + Add Booking
+
+                </a>
+
+
+            </div>
+
+
+            <!-- ================= CARDS ================= -->
+
+            <div class="cards">
+
+
+                <!-- MOVIES -->
+
+                <div class="card">
+
+
+                    <h2>
+
+                        Movies
+
+                    </h2>
+
+
+                    <p>
+
+                        View and manage all movies
+                        in the theater system.
+
+                    </p>
+
+
+                    <a
+                        href="{{ url_for('movies') }}"
+                        class="card-btn">
+
+                        View Movies
+
+                    </a>
+
+
+                </div>
+
+
+                <!-- THEATERS -->
+
+                <div class="card">
+
+
+                    <h2>
+
+                        Theaters
+
+                    </h2>
+
+
+                    <p>
+
+                        View and manage theaters,
+                        locations and seat capacity.
+
+                    </p>
+
+
+                    <a
+                        href="{{ url_for('theaters') }}"
+                        class="card-btn">
+
+                        View Theaters
+
+                    </a>
+
+
+                </div>
+
+
+                <!-- SHOWS -->
+
+                <div class="card">
+
+
+                    <h2>
+
+                        Shows
+
+                    </h2>
+
+
+                    <p>
+
+                        Manage movie shows,
+                        dates and show timings.
+
+                    </p>
+
+
+                    <a
+                        href="{{ url_for('shows') }}"
+                        class="card-btn">
+
+                        View Shows
+
+                    </a>
+
+
+                </div>
+
+
+                <!-- BOOKINGS -->
+
+                <div class="card">
+
+
+                    <h2>
+
+                        Bookings
+
+                    </h2>
+
+
+                    <p>
+
+                        Create, edit and delete
+                        customer bookings.
+
+                    </p>
+
+
+                    <a
+                        href="{{ url_for('bookings') }}"
+                        class="card-btn">
+
+                        View Bookings
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    {% endif %}
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        Theater Management System
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+
+        // ================= LIGHT THEME =================
+
+        function setLight() {
+
+            document.body.classList.remove("dark");
+
+            localStorage.setItem(
+                "theme",
+                "light"
+            );
+
+        }
+
+
+        // ================= DARK THEME =================
+
+        function setDark() {
+
+            document.body.classList.add("dark");
+
+            localStorage.setItem(
+                "theme",
+                "dark"
+            );
+
+        }
+
+
+        // ================= LOAD THEME =================
+
+        window.addEventListener(
+            "load",
+            function() {
+
+
+                const theme =
+                    localStorage.getItem("theme");
+
+
+                if (theme === "dark") {
+
+                    document.body.classList.add("dark");
+
+                }
+                else {
+
+                    document.body.classList.remove("dark");
+
+                }
+
+
+                // ================= HIDE FLASH =================
+
+                setTimeout(
+                    function() {
+
+
+                        const messages =
+                            document.querySelectorAll(
+                                ".flash-message"
+                            );
+
+
+                        messages.forEach(
+                            function(message) {
+
+
+                                message.style.opacity =
+                                    "0";
+
+
+                                setTimeout(
+                                    function() {
+
+                                        message.remove();
+
+                                    },
+                                    500
+                                );
+
+
+                            }
+                        );
+
+
+                    },
+                    3000
+                );
+
+
+            }
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>

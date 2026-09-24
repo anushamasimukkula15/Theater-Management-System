@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Theaters - Theater Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+            transition: 0.3s;
+        }
+
+        body.dark {
+            background: #181818;
+            color: white;
+        }
+
+        nav {
+            background: #222;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        nav .links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background: #444;
+        }
+
+        .theme-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-buttons button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .light-btn {
+            background: white;
+            color: black;
+        }
+
+        .dark-btn {
+            background: #555;
+            color: white;
+        }
+
+        .container {
+            width: 90%;
+            margin: 30px auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .add-button {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .add-button:hover {
+            background: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            color: #222;
+        }
+
+        body.dark table {
+            background: #252525;
+            color: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        body.dark td {
+            border-color: #555;
+        }
+
+        .edit-button,
+        .delete-button {
+            padding: 7px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            color: white;
+        }
+
+        .edit-button {
+            background: #007bff;
+        }
+
+        .edit-button:hover {
+            background: #0056b3;
+        }
+
+        .delete-button {
+            background: #dc3545;
+        }
+
+        .delete-button:hover {
+            background: #b02a37;
+        }
+
+        .message,
+        .alert,
+        .flash-message {
+            width: 90%;
+            margin: 15px auto;
+            padding: 12px;
+            border-radius: 5px;
+            text-align: center;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            transition: opacity 0.5s;
+        }
+
+        body.dark .message,
+        body.dark .alert,
+        body.dark .flash-message {
+            background: #304d35;
+            color: white;
+            border-color: #527b59;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="links">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('movies') }}">Movies</a>
+        <a href="{{ url_for('theaters') }}">Theaters</a>
+        <a href="{{ url_for('shows') }}">Shows</a>
+        <a href="{{ url_for('bookings') }}">Bookings</a>
+
+        {% if session.get('user_id') %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+    </div>
+
+    <div class="theme-buttons">
+        <button class="light-btn" onclick="setLightMode()">☀ Light</button>
+        <button class="dark-btn" onclick="setDarkMode()">🌙 Dark</button>
+    </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="message">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="container">
+
+    <h1>Theaters</h1>
+
+    <a href="{{ url_for('add_theater') }}" class="add-button">
+        + Add Theater
+    </a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Theater Name</th>
+                <th>Location</th>
+                <th>Number of Seats</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for theater in theaters %}
+            <tr>
+                <td>{{ theater.id }}</td>
+                <td>{{ theater.name }}</td>
+                <td>{{ theater.location }}</td>
+                <td>{{ theater.seats }}</td>
+
+                <td>
+                    <a href="{{ url_for('edit_theater', id=theater.id) }}"
+                       class="edit-button">
+                        Edit
+                    </a>
+
+                    <form action="{{ url_for('delete_theater', id=theater.id) }}"
+                          method="POST"
+                          style="display:inline;">
+
+                        <button type="submit"
+                                class="delete-button"
+                                onclick="return confirm('Are you sure you want to delete this theater?');">
+                            Delete
+                        </button>
+
+                    </form>
+                </td>
+            </tr>
+
+            {% else %}
+            <tr>
+                <td colspan="5">
+                    No theaters available.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    function setLightMode() {
+        document.body.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+    }
+
+    function setDarkMode() {
+        document.body.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+    }
+
+    window.onload = function () {
+        const theme = localStorage.getItem("theme");
+
+        if (theme === "dark") {
+            document.body.classList.add("dark");
+        } else {
+            document.body.classList.remove("dark");
+        }
+
+        setTimeout(function () {
+            const messages = document.querySelectorAll(
+                ".message, .alert, .flash-message"
+            );
+
+            messages.forEach(function (message) {
+                message.style.opacity = "0";
+
+                setTimeout(function () {
+                    message.remove();
+                }, 500);
+            });
+        }, 3000);
+    };
+</script>
+
+</body>
+</html>

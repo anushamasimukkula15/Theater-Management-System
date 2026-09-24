@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% if movie %}
+            Edit Movie
+        {% else %}
+            Add Movie
+        {% endif %}
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f4f6f9;
+
+            color: #222;
+
+            transition: 0.3s;
+        }
+
+
+        body.dark {
+            background: #121212;
+
+            color: white;
+        }
+
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #222;
+
+            padding: 15px 25px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+        }
+
+
+        nav a {
+            color: white;
+
+            text-decoration: none;
+
+            padding: 10px 14px;
+
+            border-radius: 6px;
+        }
+
+
+        nav a:hover {
+            background: #444;
+        }
+
+
+        .theme-buttons {
+            margin-left: auto;
+
+            display: flex;
+
+            gap: 8px;
+        }
+
+
+        .theme-buttons button {
+            padding: 8px 14px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        .light-btn {
+            background: white;
+
+            color: black;
+        }
+
+
+        .dark-btn {
+            background: #555;
+
+            color: white;
+        }
+
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            width: 90%;
+
+            max-width: 600px;
+
+            margin: 50px auto;
+        }
+
+
+        .form-box {
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(0, 0, 0, 0.12);
+        }
+
+
+        body.dark .form-box {
+            background: #1e1e1e;
+        }
+
+
+        h1 {
+            text-align: center;
+
+            margin-top: 0;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* ================= FORM ================= */
+
+        label {
+            display: block;
+
+            margin-top: 18px;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+        }
+
+
+        input {
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+
+        body.dark input {
+            background: #2b2b2b;
+
+            color: white;
+
+            border-color: #555;
+        }
+
+
+        input:focus {
+            outline: none;
+
+            border-color: #007bff;
+        }
+
+
+        /* ================= BUTTON ================= */
+
+        .submit-btn {
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 13px;
+
+            background: #007bff;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 6px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+
+
+        .cancel-btn {
+            display: block;
+
+            width: 100%;
+
+            margin-top: 12px;
+
+            padding: 12px;
+
+            background: #6c757d;
+
+            color: white;
+
+            text-decoration: none;
+
+            text-align: center;
+
+            border-radius: 6px;
+        }
+
+
+        .cancel-btn:hover {
+            background: #545b62;
+        }
+
+
+        /* ================= FLASH ================= */
+
+        .flash-message {
+            width: 90%;
+
+            max-width: 600px;
+
+            margin: 15px auto;
+
+            padding: 12px;
+
+            text-align: center;
+
+            border-radius: 6px;
+
+            background: #d4edda;
+
+            color: #155724;
+
+            transition: opacity 0.5s;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav>
+
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+
+        <a href="{{ url_for('movies') }}">
+            Movies
+        </a>
+
+
+        <a href="{{ url_for('theaters') }}">
+            Theaters
+        </a>
+
+
+        <a href="{{ url_for('shows') }}">
+            Shows
+        </a>
+
+
+        <a href="{{ url_for('bookings') }}">
+            Bookings
+        </a>
+
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+
+        <div class="theme-buttons">
+
+            <button
+                type="button"
+                class="light-btn"
+                onclick="setLight()">
+
+                Light
+
+            </button>
+
+
+            <button
+                type="button"
+                class="dark-btn"
+                onclick="setDark()">
+
+                Dark
+
+            </button>
+
+        </div>
+
+
+    </nav>
+
+
+    <!-- ================= FLASH MESSAGES ================= -->
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="flash-message">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- ================= MAIN ================= -->
+
+    <div class="container">
+
+
+        <div class="form-box">
+
+
+            <!-- TITLE -->
+
+            <h1>
+
+                {% if movie %}
+
+                    Edit Movie
+
+                {% else %}
+
+                    Add Movie
+
+                {% endif %}
+
+            </h1>
+
+
+            <!-- ================= FORM ================= -->
+
+            <form method="POST">
+
+
+                <!-- MOVIE TITLE -->
+
+                <label for="title">
+
+                    Movie Name
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    value="{{ movie['name'] if movie else ''}}"
+                    placeholder="Enter movie name"
+                    required>
+
+
+                <!-- GENRE -->
+
+                <label for="genre">
+
+                    Genre
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="genre"
+                    name="genre"
+                    value="{{ movie['genre'] if movie else '' }}"
+                    placeholder="Enter genre"
+                    required>
+
+
+                <!-- DURATION -->
+
+                <label for="duration">
+
+                    Duration (minutes)
+
+                </label>
+
+
+                <input
+                    type="number"
+                    id="duration"
+                    name="duration"
+                    value="{{ movie['duration'] if movie else '' }}"
+                    placeholder="Enter duration in minutes"
+                    min="1"
+                    required>
+
+
+                <!-- LANGUAGE -->
+
+                <label for="language">
+
+                    Language
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="language"
+                    name="language"
+                    value="{{ movie['language'] if movie else '' }}"
+                    placeholder="Enter language"
+                    required>
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="submit-btn">
+
+                    {% if movie %}
+
+                        Update Movie
+
+                    {% else %}
+
+                        Add Movie
+
+                    {% endif %}
+
+                </button>
+
+
+                <!-- CANCEL -->
+
+                <a
+                    href="{{ url_for('movies') }}"
+                    class="cancel-btn">
+
+                    Cancel
+
+                </a>
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+
+        // ================= LIGHT =================
+
+        function setLight() {
+
+            document.body.classList.remove("dark");
+
+            localStorage.setItem(
+                "theme",
+                "light"
+            );
+
+        }
+
+
+        // ================= DARK =================
+
+        function setDark() {
+
+            document.body.classList.add("dark");
+
+            localStorage.setItem(
+                "theme",
+                "dark"
+            );
+
+        }
+
+
+        // ================= LOAD THEME =================
+
+        window.addEventListener(
+            "load",
+            function() {
+
+
+                const theme =
+                    localStorage.getItem("theme");
+
+
+                if (theme === "dark") {
+
+                    document.body.classList.add("dark");
+
+                }
+
+
+                // Auto-hide flash messages
+
+                setTimeout(
+                    function() {
+
+
+                        const messages =
+                            document.querySelectorAll(
+                                ".flash-message"
+                            );
+
+
+                        messages.forEach(
+                            function(message) {
+
+
+                                message.style.opacity =
+                                    "0";
+
+
+                                setTimeout(
+                                    function() {
+
+                                        message.remove();
+
+                                    },
+                                    500
+                                );
+
+                            }
+                        );
+
+
+                    },
+                    3000
+                );
+
+
+            }
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>

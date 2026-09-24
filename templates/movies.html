@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Movies - Theater Management System</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f4f6f9;
+
+            color: #222;
+
+            transition: 0.3s;
+        }
+
+
+        body.dark {
+            background: #121212;
+
+            color: white;
+        }
+
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #222;
+
+            padding: 15px 25px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+        }
+
+
+        nav a {
+            color: white;
+
+            text-decoration: none;
+
+            padding: 10px 14px;
+
+            border-radius: 6px;
+        }
+
+
+        nav a:hover {
+            background: #444;
+        }
+
+
+        .theme-buttons {
+            margin-left: auto;
+
+            display: flex;
+
+            gap: 8px;
+        }
+
+
+        .theme-buttons button {
+            padding: 8px 14px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        .light-btn {
+            background: white;
+
+            color: black;
+        }
+
+
+        .dark-btn {
+            background: #555;
+
+            color: white;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: 95%;
+
+            max-width: 1300px;
+
+            margin: 40px auto;
+        }
+
+
+        h1 {
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* ================= ADD MOVIE ================= */
+
+        .top-section {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+
+            flex-wrap: wrap;
+
+            gap: 15px;
+        }
+
+
+        .add-btn {
+            display: inline-block;
+
+            padding: 12px 20px;
+
+            background: #28a745;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-weight: bold;
+        }
+
+
+        .add-btn:hover {
+            background: #218838;
+        }
+
+
+        /* ================= TABLE ================= */
+
+        .table-container {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            background: white;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.10);
+        }
+
+
+        body.dark table {
+            background: #1e1e1e;
+
+            color: white;
+        }
+
+
+        th {
+            background: #343a40;
+
+            color: white;
+
+            padding: 14px 12px;
+
+            text-align: center;
+
+            white-space: nowrap;
+        }
+
+
+        td {
+            padding: 13px 12px;
+
+            text-align: center;
+
+            border-bottom: 1px solid #ddd;
+
+            white-space: nowrap;
+        }
+
+
+        body.dark td {
+            border-bottom: 1px solid #444;
+        }
+
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+
+
+        body.dark tr:hover {
+            background: #2b2b2b;
+        }
+
+
+        /* ================= MOVIE TITLE ================= */
+
+        .movie-title {
+            font-weight: bold;
+
+            color: #007bff;
+        }
+
+
+        body.dark .movie-title {
+            color: #66b3ff;
+        }
+
+
+        /* ================= BUTTONS ================= */
+
+        .edit-btn {
+            display: inline-block;
+
+            padding: 8px 13px;
+
+            background: #007bff;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 5px;
+
+            margin-right: 5px;
+        }
+
+
+        .edit-btn:hover {
+            background: #0056b3;
+        }
+
+
+        .delete-btn {
+            padding: 8px 13px;
+
+            background: #dc3545;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+        }
+
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+
+        .delete-form {
+            display: inline;
+        }
+
+
+        /* ================= NO DATA ================= */
+
+        .no-data {
+            background: white;
+
+            padding: 35px;
+
+            text-align: center;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 3px 10px
+                rgba(0, 0, 0, 0.10);
+
+            font-size: 18px;
+        }
+
+
+        body.dark .no-data {
+            background: #1e1e1e;
+        }
+
+
+        /* ================= FLASH ================= */
+
+        .flash-message {
+            width: 90%;
+
+            max-width: 700px;
+
+            margin: 15px auto;
+
+            padding: 12px;
+
+            text-align: center;
+
+            border-radius: 6px;
+
+            background: #d4edda;
+
+            color: #155724;
+
+            transition: opacity 0.5s;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav>
+
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+
+        <a href="{{ url_for('movies') }}">
+            Movies
+        </a>
+
+
+        <a href="{{ url_for('theaters') }}">
+            Theaters
+        </a>
+
+
+        <a href="{{ url_for('shows') }}">
+            Shows
+        </a>
+
+
+        <a href="{{ url_for('bookings') }}">
+            Bookings
+        </a>
+
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+
+        <!-- THEME BUTTONS -->
+
+        <div class="theme-buttons">
+
+            <button
+                type="button"
+                class="light-btn"
+                onclick="setLight()">
+
+                Light
+
+            </button>
+
+
+            <button
+                type="button"
+                class="dark-btn"
+                onclick="setDark()">
+
+                Dark
+
+            </button>
+
+        </div>
+
+
+    </nav>
+
+
+    <!-- ================= FLASH MESSAGES ================= -->
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="flash-message">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- ================= MAIN ================= -->
+
+    <div class="container">
+
+
+        <h1>
+            Movies
+        </h1>
+
+
+        <!-- ================= TOP SECTION ================= -->
+
+        <div class="top-section">
+
+
+            <div>
+
+                <strong>
+                    Movie Management
+                </strong>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('add_movie') }}"
+                class="add-btn">
+
+                + Add Movie
+
+            </a>
+
+
+        </div>
+
+
+        <!-- ================= MOVIE TABLE ================= -->
+
+        {% if movies %}
+
+
+        <div class="table-container">
+
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Movie Name
+                        </th>
+
+                        <th>
+                            Genre
+                        </th>
+
+                        <th>
+                            Duration
+                        </th>
+
+                        <th>
+                            Language
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for movie in movies %}
+
+
+                    <tr>
+
+
+                        <!-- ID -->
+
+                        <td>
+
+                            {{ movie["id"] }}
+
+                        </td>
+
+
+                        <!-- MOVIE NAME -->
+
+                        <td class="movie-title">
+
+                            {{ movie["name"]}}
+
+                        </td>
+
+
+                        <!-- GENRE -->
+
+                        <td>
+
+                            {{ movie["genre"] }}
+
+                        </td>
+
+
+                        <!-- DURATION -->
+
+                        <td>
+
+                            {{ movie["duration"] }}
+                            minutes
+
+                        </td>
+
+
+                        <!-- LANGUAGE -->
+
+                        <td>
+
+                            {{ movie["language"] }}
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
+
+                        <td>
+
+
+                            <!-- EDIT -->
+
+                            <a
+                                href="{{ url_for('edit_movie', id=movie['id']) }}"
+                                class="edit-btn">
+
+                                Edit
+
+                            </a>
+
+
+                            <!-- DELETE -->
+
+                            <form
+                                action="{{ url_for('delete_movie', id=movie['id']) }}"
+                                method="POST"
+                                class="delete-form">
+
+
+                                <button
+                                    type="submit"
+                                    class="delete-btn"
+                                    onclick="return confirm('Are you sure you want to delete this movie?');">
+
+                                    Delete
+
+                                </button>
+
+
+                            </form>
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+        {% else %}
+
+
+        <div class="no-data">
+
+            No movies available.
+
+            <br><br>
+
+            <a
+                href="{{ url_for('add_movie') }}"
+                class="add-btn">
+
+                + Add Your First Movie
+
+            </a>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+
+        // ================= LIGHT THEME =================
+
+        function setLight() {
+
+            document.body.classList.remove("dark");
+
+            localStorage.setItem(
+                "theme",
+                "light"
+            );
+
+        }
+
+
+        // ================= DARK THEME =================
+
+        function setDark() {
+
+            document.body.classList.add("dark");
+
+            localStorage.setItem(
+                "theme",
+                "dark"
+            );
+
+        }
+
+
+        // ================= LOAD THEME =================
+
+        window.addEventListener(
+            "load",
+            function() {
+
+
+                const theme =
+                    localStorage.getItem("theme");
+
+
+                if (theme === "dark") {
+
+                    document.body.classList.add("dark");
+
+                }
+
+
+                // Auto-hide flash messages
+
+                setTimeout(
+                    function() {
+
+
+                        const messages =
+                            document.querySelectorAll(
+                                ".flash-message"
+                            );
+
+
+                        messages.forEach(
+                            function(message) {
+
+
+                                message.style.opacity =
+                                    "0";
+
+
+                                setTimeout(
+                                    function() {
+
+                                        message.remove();
+
+                                    },
+                                    500
+                                );
+
+                            }
+                        );
+
+
+                    },
+                    3000
+                );
+
+
+            }
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>

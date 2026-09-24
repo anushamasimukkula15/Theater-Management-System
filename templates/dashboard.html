@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Theater Management System</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+
+            background: #f4f6f9;
+            color: #222;
+
+            transition: 0.3s;
+        }
+
+
+        body.dark {
+            background: #121212;
+            color: white;
+        }
+
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #222;
+
+            padding: 15px 25px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+        }
+
+
+        nav a {
+            color: white;
+
+            text-decoration: none;
+
+            padding: 10px 14px;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+        }
+
+
+        nav a:hover {
+            background: #444;
+        }
+
+
+        .theme-buttons {
+            margin-left: auto;
+
+            display: flex;
+
+            gap: 8px;
+        }
+
+
+        .theme-buttons button {
+            padding: 8px 15px;
+
+            border: none;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        .light-btn {
+            background: white;
+            color: black;
+        }
+
+
+        .dark-btn {
+            background: #555;
+            color: white;
+        }
+
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            width: 92%;
+
+            max-width: 1200px;
+
+            margin: 40px auto;
+        }
+
+
+        .welcome {
+            text-align: center;
+
+            font-size: 30px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+
+        .title {
+            text-align: center;
+
+            font-size: 38px;
+
+            font-weight: bold;
+
+            margin-bottom: 35px;
+        }
+
+
+        /* ================= FLASH MESSAGE ================= */
+
+        .flash-message {
+            width: 90%;
+
+            max-width: 700px;
+
+            margin: 20px auto;
+
+            padding: 12px;
+
+            text-align: center;
+
+            border-radius: 6px;
+
+            background: #d4edda;
+
+            color: #155724;
+
+            transition: opacity 0.5s;
+        }
+
+
+        /* ================= STAT CARDS ================= */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
+            gap: 25px;
+
+            margin-bottom: 40px;
+        }
+
+
+        .stat-card {
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.10);
+
+            transition: 0.3s;
+        }
+
+
+        body.dark .stat-card {
+            background: #1e1e1e;
+        }
+
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+
+        .stat-card h2 {
+            margin: 0 0 12px 0;
+
+            font-size: 22px;
+        }
+
+
+        .stat-number {
+            font-size: 40px;
+
+            font-weight: bold;
+
+            margin-bottom: 15px;
+        }
+
+
+        .movies-number {
+            color: #007bff;
+        }
+
+
+        .theaters-number {
+            color: #28a745;
+        }
+
+
+        .shows-number {
+            color: #6f42c1;
+        }
+
+
+        .bookings-number {
+            color: #fd7e14;
+        }
+
+
+        /* ================= ACTIONS ================= */
+
+        .section-title {
+            text-align: center;
+
+            font-size: 26px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .actions {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
+            gap: 20px;
+        }
+
+
+        .action-card {
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            text-align: center;
+
+            box-shadow:
+                0 3px 10px
+                rgba(0, 0, 0, 0.10);
+        }
+
+
+        body.dark .action-card {
+            background: #1e1e1e;
+        }
+
+
+        .action-card h3 {
+            margin-top: 0;
+
+            font-size: 21px;
+        }
+
+
+        .action-card p {
+            color: #666;
+
+            line-height: 1.5;
+        }
+
+
+        body.dark .action-card p {
+            color: #ccc;
+        }
+
+
+        .action-btn {
+            display: inline-block;
+
+            margin-top: 12px;
+
+            padding: 11px 18px;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-weight: bold;
+        }
+
+
+        .blue {
+            background: #007bff;
+        }
+
+
+        .blue:hover {
+            background: #0056b3;
+        }
+
+
+        .green {
+            background: #28a745;
+        }
+
+
+        .green:hover {
+            background: #218838;
+        }
+
+
+        .purple {
+            background: #6f42c1;
+        }
+
+
+        .purple:hover {
+            background: #59339d;
+        }
+
+
+        .orange {
+            background: #fd7e14;
+        }
+
+
+        .orange:hover {
+            background: #e8590c;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            margin-top: 50px;
+
+            padding: 20px;
+
+            background: #222;
+
+            color: white;
+
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav>
+
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+
+        <a href="{{ url_for('movies') }}">
+            Movies
+        </a>
+
+
+        <a href="{{ url_for('theaters') }}">
+            Theaters
+        </a>
+
+
+        <a href="{{ url_for('shows') }}">
+            Shows
+        </a>
+
+
+        <a href="{{ url_for('bookings') }}">
+            Bookings
+        </a>
+
+
+        <a href="{{ url_for('dashboard') }}">
+            Dashboard
+        </a>
+
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+
+        <!-- THEME BUTTONS -->
+
+        <div class="theme-buttons">
+
+            <button
+                type="button"
+                class="light-btn"
+                onclick="setLight()">
+
+                Light
+
+            </button>
+
+
+            <button
+                type="button"
+                class="dark-btn"
+                onclick="setDark()">
+
+                Dark
+
+            </button>
+
+        </div>
+
+
+    </nav>
+
+
+    <!-- ================= FLASH MESSAGES ================= -->
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="flash-message">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- ================= MAIN ================= -->
+
+    <div class="container">
+
+
+        <!-- WELCOME -->
+
+        <div class="welcome">
+
+            Welcome {{ session.get("user_name") }}
+
+        </div>
+
+
+        <div class="title">
+
+            Theater Management System
+
+        </div>
+
+
+        <!-- ================= STATISTICS ================= -->
+
+        <div class="stats">
+
+
+            <!-- MOVIES -->
+
+            <div class="stat-card">
+
+                <h2>
+                    Movies
+                </h2>
+
+                <div class="stat-number movies-number">
+
+                    {{ counts["movies"] }}
+
+                </div>
+
+                <a
+                    href="{{ url_for('movies') }}"
+                    class="action-btn blue">
+
+                    View Movies
+
+                </a>
+
+            </div>
+
+
+            <!-- THEATERS -->
+
+            <div class="stat-card">
+
+                <h2>
+                    Theaters
+                </h2>
+
+                <div class="stat-number theaters-number">
+
+                    {{ counts["theaters"] }}
+
+                </div>
+
+                <a
+                    href="{{ url_for('theaters') }}"
+                    class="action-btn green">
+
+                    View Theaters
+
+                </a>
+
+            </div>
+
+
+            <!-- SHOWS -->
+
+            <div class="stat-card">
+
+                <h2>
+                    Shows
+                </h2>
+
+                <div class="stat-number shows-number">
+
+                    {{ counts["shows"] }}
+
+                </div>
+
+                <a
+                    href="{{ url_for('shows') }}"
+                    class="action-btn purple">
+
+                    View Shows
+
+                </a>
+
+            </div>
+
+
+            <!-- BOOKINGS -->
+
+            <div class="stat-card">
+
+                <h2>
+                    My Bookings
+                </h2>
+
+                <div class="stat-number bookings-number">
+
+                    {{ counts["bookings"] }}
+
+                </div>
+
+                <a
+                    href="{{ url_for('bookings') }}"
+                    class="action-btn orange">
+
+                    View Bookings
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================= QUICK ACTIONS ================= -->
+
+        <h2 class="section-title">
+
+            Quick Actions
+
+        </h2>
+
+
+        <div class="actions">
+
+
+            <!-- ADD MOVIE -->
+
+            <div class="action-card">
+
+                <h3>
+                    Add Movie
+                </h3>
+
+                <p>
+                    Add a new movie to the theater system.
+                </p>
+
+                <a
+                    href="{{ url_for('add_movie') }}"
+                    class="action-btn blue">
+
+                    + Add Movie
+
+                </a>
+
+            </div>
+
+
+            <!-- ADD THEATER -->
+
+            <div class="action-card">
+
+                <h3>
+                    Add Theater
+                </h3>
+
+                <p>
+                    Add a theater with its location
+                    and number of seats.
+                </p>
+
+                <a
+                    href="{{ url_for('add_theater') }}"
+                    class="action-btn green">
+
+                    + Add Theater
+
+                </a>
+
+            </div>
+
+
+            <!-- ADD SHOW -->
+
+            <div class="action-card">
+
+                <h3>
+                    Add Show
+                </h3>
+
+                <p>
+                    Create a new movie show with
+                    date and time.
+                </p>
+
+                <a
+                    href="{{ url_for('add_show') }}"
+                    class="action-btn purple">
+
+                    + Add Show
+
+                </a>
+
+            </div>
+
+
+            <!-- ADD BOOKING -->
+
+            <div class="action-card">
+
+                <h3>
+                    Add Booking
+                </h3>
+
+                <p>
+                    Create a customer booking
+                    for an available show.
+                </p>
+
+
+                <!-- IMPORTANT:
+                     There is NO add_booking endpoint.
+                     The bookings route handles both
+                     displaying and creating bookings. -->
+
+                <a
+                    href="{{ url_for('bookings') }}"
+                    class="action-btn orange">
+
+                    + Add Booking
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        Theater Management System
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+
+        // ================= LIGHT =================
+
+        function setLight() {
+
+            document.body.classList.remove("dark");
+
+            localStorage.setItem(
+                "theme",
+                "light"
+            );
+
+        }
+
+
+        // ================= DARK =================
+
+        function setDark() {
+
+            document.body.classList.add("dark");
+
+            localStorage.setItem(
+                "theme",
+                "dark"
+            );
+
+        }
+
+
+        // ================= LOAD THEME =================
+
+        window.addEventListener(
+            "load",
+            function() {
+
+
+                const theme =
+                    localStorage.getItem("theme");
+
+
+                if (theme === "dark") {
+
+                    document.body.classList.add("dark");
+
+                }
+
+
+                // ================= AUTO HIDE FLASH =================
+
+                setTimeout(
+                    function() {
+
+
+                        const messages =
+                            document.querySelectorAll(
+                                ".flash-message"
+                            );
+
+
+                        messages.forEach(
+                            function(message) {
+
+                                message.style.opacity =
+                                    "0";
+
+
+                                setTimeout(
+                                    function() {
+
+                                        message.remove();
+
+                                    },
+                                    500
+                                );
+
+                            }
+                        );
+
+
+                    },
+                    3000
+                );
+
+
+            }
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>

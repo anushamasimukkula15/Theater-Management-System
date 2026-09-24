@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register - Theater Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        :root {
+            --bg-color: #f4f6f9;
+            --text-color: #222;
+            --card-color: white;
+            --button-color: #4b4ded;
+        }
+
+        body.dark {
+            --bg-color: #181818;
+            --text-color: white;
+            --card-color: #292929;
+            --button-color: #7777ff;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            transition: 0.3s;
+        }
+
+        nav {
+            background: #292b5f;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .logo {
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .theme-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .light-btn {
+            background: #f1c40f;
+            color: black;
+        }
+
+        .dark-btn {
+            background: #222;
+            color: white;
+        }
+
+        .register-container {
+            max-width: 450px;
+            margin: 45px auto;
+            padding: 20px;
+        }
+
+        .register-card {
+            background: var(--card-color);
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #0003;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: var(--card-color);
+            color: var(--text-color);
+        }
+
+        .register-btn {
+            width: 100%;
+            background: var(--button-color);
+            color: white;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-link a {
+            color: var(--button-color);
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #842029;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+
+        <div class="logo">
+            Theater Management System
+        </div>
+
+        <div class="theme-buttons">
+
+            <button class="light-btn" onclick="setLightTheme()">
+                ☀ Light
+            </button>
+
+            <button class="dark-btn" onclick="setDarkTheme()">
+                🌙 Dark
+            </button>
+
+        </div>
+
+    </nav>
+
+
+    <div class="register-container">
+
+        <div class="register-card">
+
+            <h2>Create Account</h2>
+
+            {% if error %}
+                <div class="error-message">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            {% if success %}
+                <div class="success-message">
+                    {{ success }}
+                </div>
+            {% endif %}
+
+
+            <form method="POST" action="{{ url_for('register') }}">
+
+                <label for="name">Full Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+
+                <label for="email">Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    minlength="6"
+                    required
+                >
+
+
+                <label for="confirm_password">
+                    Confirm Password
+                </label>
+
+                <input
+                    type="password"
+                    id="confirm_password"
+                    name="confirm_password"
+                    placeholder="Confirm your password"
+                    minlength="6"
+                    required
+                >
+
+
+                <button type="submit" class="register-btn">
+                    Register
+                </button>
+
+            </form>
+
+
+            <div class="login-link">
+
+                <p>
+                    Already have an account?
+                    <a href="{{ url_for('login') }}">Login</a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <footer>
+        <p>© 2026 Theater Management System</p>
+    </footer>
+
+
+    <script>
+
+        function setLightTheme() {
+            document.body.classList.remove("dark");
+            localStorage.setItem("theme", "light");
+        }
+
+
+        function setDarkTheme() {
+            document.body.classList.add("dark");
+            localStorage.setItem("theme", "dark");
+        }
+
+
+        window.onload = function () {
+
+            const theme = localStorage.getItem("theme");
+
+            if (theme === "dark") {
+                document.body.classList.add("dark");
+            } else {
+                document.body.classList.remove("dark");
+            }
+
+        };
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% if edit_mode %}
+            Edit Show
+        {% else %}
+            Add Show
+        {% endif %}
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #222;
+            transition: 0.3s;
+        }
+
+        body.dark {
+            background: #121212;
+            color: white;
+        }
+
+        /* NAVBAR */
+        nav {
+            background: #222;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
+
+        nav a:hover {
+            background: #444;
+        }
+
+        .theme-buttons {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-buttons button {
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .light-btn {
+            background: white;
+            color: black;
+        }
+
+        .dark-btn {
+            background: #555;
+            color: white;
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 90%;
+            max-width: 650px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* FORM CARD */
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        body.dark .form-card {
+            background: #1e1e1e;
+            color: white;
+        }
+
+        /* LABELS */
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        /* INPUTS */
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #007bff;
+        }
+
+        body.dark input,
+        body.dark select {
+            background: #2b2b2b;
+            color: white;
+            border: 1px solid #555;
+        }
+
+        body.dark select option {
+            background: #2b2b2b;
+            color: white;
+        }
+
+        /* BUTTONS */
+        .button-group {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .submit-btn {
+            flex: 1;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .cancel-btn {
+            flex: 1;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
+
+        /* FLASH MESSAGE */
+        .flash-message {
+            width: 90%;
+            max-width: 650px;
+            margin: 20px auto;
+            padding: 12px;
+            text-align: center;
+            border-radius: 6px;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .required {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+
+        <a href="{{ url_for('home') }}">
+            Home
+        </a>
+
+        <a href="{{ url_for('movies') }}">
+            Movies
+        </a>
+
+        <a href="{{ url_for('theaters') }}">
+            Theaters
+        </a>
+
+        <a href="{{ url_for('shows') }}">
+            Shows
+        </a>
+
+        <a href="{{ url_for('bookings') }}">
+            Bookings
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+        <div class="theme-buttons">
+
+            <button
+                type="button"
+                class="light-btn"
+                onclick="setLight()">
+                Light
+            </button>
+
+            <button
+                type="button"
+                class="dark-btn"
+                onclick="setDark()">
+                Dark
+            </button>
+
+        </div>
+
+    </nav>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="flash-message">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+
+        <h1>
+
+            {% if edit_mode %}
+                Edit Show
+            {% else %}
+                Add Show
+            {% endif %}
+
+        </h1>
+
+
+        <div class="form-card">
+
+            <form method="POST">
+
+                <!-- MOVIE -->
+                <label for="movie_id">
+                    Movie <span class="required">*</span>
+                </label>
+
+                <select
+                    id="movie_id"
+                    name="movie_id"
+                    required>
+
+                    <option value="">
+                        Select Movie
+                    </option>
+
+                    {% for movie in movies %}
+
+                        <option
+                            value="{{ movie['id'] }}"
+
+                            {% if show and show['movie_id']|int == movie['id']|int %}
+                                selected
+                            {% endif %}
+                        >
+
+                            {{ movie['name'] }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                <!-- THEATER -->
+                <label for="theater_id">
+                    Theater <span class="required">*</span>
+                </label>
+
+                <select
+                    id="theater_id"
+                    name="theater_id"
+                    required>
+
+                    <option value="">
+                        Select Theater
+                    </option>
+
+                    {% for theater in theaters %}
+
+                        <option
+                            value="{{ theater['id'] }}"
+
+                            {% if show and show['theater_id']|int == theater['id']|int %}
+                                selected
+                            {% endif %}
+                        >
+
+                            {{ theater['name'] }}
+
+                            {% if theater['location'] %}
+                                - {{ theater['location'] }}
+                            {% endif %}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                <!-- SHOW DATE -->
+                <label for="show_date">
+                    Show Date <span class="required">*</span>
+                </label>
+
+                <input
+                    type="date"
+                    id="show_date"
+                    name="show_date"
+                    value="{% if show %}{{ show['show_date'] }}{% endif %}"
+                    required>
+
+
+                <!-- SHOW TIME -->
+                <label for="show_time">
+                    Show Time <span class="required">*</span>
+                </label>
+
+                <input
+                    type="time"
+                    id="show_time"
+                    name="show_time"
+                    value="{% if show %}{{ show['show_time'] }}{% endif %}"
+                    required>
+
+
+                <!-- TICKET PRICE -->
+                <label for="ticket_price">
+                    Ticket Price
+                </label>
+
+                <input
+                    type="number"
+                    id="ticket_price"
+                    name="ticket_price"
+                    min="0"
+                    step="0.01"
+                    placeholder="Enter ticket price"
+                    value="{% if show %}{{ show['ticket_price'] or 0 }}{% else %}0{% endif %}">
+
+
+                <!-- BUTTONS -->
+                <div class="button-group">
+
+                    <button
+                        type="submit"
+                        class="submit-btn">
+
+                        {% if edit_mode %}
+                            Update Show
+                        {% else %}
+                            Add Show
+                        {% endif %}
+
+                    </button>
+
+                    <a
+                        href="{{ url_for('shows') }}"
+                        class="cancel-btn">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+    <script>
+
+        function setLight() {
+
+            document.body.classList.remove("dark");
+
+            localStorage.setItem("theme", "light");
+
+        }
+
+
+        function setDark() {
+
+            document.body.classList.add("dark");
+
+            localStorage.setItem("theme", "dark");
+
+        }
+
+
+        window.onload = function () {
+
+            /* LOAD SAVED THEME */
+
+            const theme = localStorage.getItem("theme");
+
+            if (theme === "dark") {
+
+                document.body.classList.add("dark");
+
+            } else {
+
+                document.body.classList.remove("dark");
+
+            }
+
+
+            /* HIDE FLASH MESSAGE */
+
+            setTimeout(function () {
+
+                const messages =
+                    document.querySelectorAll(".flash-message");
+
+                messages.forEach(function (message) {
+
+                    message.style.transition =
+                        "opacity 0.5s";
+
+                    message.style.opacity = "0";
+
+                    setTimeout(function () {
+
+                        message.remove();
+
+                    }, 500);
+
+                });
+
+            }, 3000);
+
+        };
+
+    </script>
+
+</body>
+
+</html>
